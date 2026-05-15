@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    database: ecommerce_pipeline
+    schema: raw
+    tables:
+      - name: orders
+      - name: order_items
+      - name: order_payments
+      - name: customers
+      - name: products
+      - name: sellers
+      - name: order_reviews
