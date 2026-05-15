@@ -7,20 +7,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def get_secret(key):
+    # Streamlit Cloud secrets take priority, fall back to .env for local dev
+    if key in st.secrets:
+        return st.secrets[key]
+    return os.getenv(key)
+
 st.set_page_config(page_title="E-Commerce Pipeline Dashboard", layout="wide")
 
 @st.cache_data(ttl=600)
 def run_query(sql):
     conn = snowflake.connector.connect(
-        account=os.getenv("SNOWFLAKE_ACCOUNT"),
-        user=os.getenv("SNOWFLAKE_USER"),
-        password=os.getenv("SNOWFLAKE_PASSWORD"),
-        database=os.getenv("SNOWFLAKE_DATABASE"),
-        warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
+        account=get_secret("SNOWFLAKE_ACCOUNT"),
+        user=get_secret("SNOWFLAKE_USER"),
+        password=get_secret("SNOWFLAKE_PASSWORD"),
+        database=get_secret("SNOWFLAKE_DATABASE"),
+        warehouse=get_secret("SNOWFLAKE_WAREHOUSE"),
         role="SYSADMIN",
     )
     cur = conn.cursor()
-    cur.execute(f"USE WAREHOUSE {os.getenv('SNOWFLAKE_WAREHOUSE')}")
+    cur.execute(f"USE WAREHOUSE {get_secret('SNOWFLAKE_WAREHOUSE')}")
     cur.execute(sql)
     df = pd.DataFrame(cur.fetchall(), columns=[d[0] for d in cur.description])
     conn.close()
