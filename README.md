@@ -2,6 +2,8 @@
 
 End-to-end data engineering portfolio project — raw CSV data to a live analytics dashboard.
 
+**Live Dashboard:** https://retailflow-xwktjhtytuuqjxysq6bsaj.streamlit.app/
+
 ## Architecture
 
 ```
